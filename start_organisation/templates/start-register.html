@@ -5,19 +5,22 @@
     <div class="small-12 columns">
       <form method="post" action="">
         <h2>Registrations</h2>
-        {{form.register_data}}
-        {{form.register_data.label}}
         <p>
+          {{render_checkbox(form.register_data)}}
+        </p>
+        <p class="hint">
           This could include: keeping customers’ addresses on file, recording staff working hours, giving delivery information to a delivery company.
         </p>
-        {{form.register_employer}}
-        {{form.register_employer.label}}
         <p>
+          {{render_checkbox(form.register_employer)}}
+        </p>
+        <p class="hint">
            This includes if you’re employing yourself eg as the only director of a limited company.
         </p>
-        {{form.register_construction}}
-        {{form.register_construction.label}}
         <p>
+          {{render_checkbox(form.register_construction)}}
+        </p>
+        <p class="hint">
           You must register as a contractor with the Construction Industry Scheme (CIS) if: you pay subcontractors to do construction work your business doesn’t do construction work but you usually spend more than £1 million a year on construction.
         </p>
         <hr/>
@@ -29,11 +32,11 @@
           </li>
           <li>
             <span>&#10003;</span>
-            Directors will automatically be registered for <a href="">Self Assessment</a>
+            Directors will automatically be registered for <a href="#">Self Assessment</a>
           </li>
           <li class="pending">
             <span>&dash;</span>
-            Your organisation will automatically be registered for <a href="">VAT</a> once 
+            Your organisation will automatically be registered for <a href="#">VAT</a> once 
             its VAT taxable turnover reaches more than &pound;81,000
           </li>
         </ul>

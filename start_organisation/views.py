@@ -184,6 +184,7 @@ def start_review():
 
 @app.route("/start/done")
 def start_done():
+    session.clear()
     return render_template('start-done.html')
 
 @app.route("/manage")
