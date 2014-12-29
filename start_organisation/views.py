@@ -169,13 +169,12 @@ def start_review():
         if form.validate():
             data = {
                 'organisation_type': order.organisation_type,
-                'name': form.name.data,
-                'activities': form.activities.data
+                'name': order.name,
+                'activities': order.activities
             }
 
             response = registry.post('/organisations', data=data, format='json')
             if response.status == 201:
-                flash('Organsiation created', 'success')
                 session.pop('order', None)
                 return redirect(url_for('start_done'))
             else:
