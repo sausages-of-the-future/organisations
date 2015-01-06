@@ -1,4 +1,3 @@
-#!/usr/bin/python
 from start_organisation import app
 import os
 
