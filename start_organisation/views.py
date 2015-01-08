@@ -1,16 +1,31 @@
 import os
-import jinja2
-import json
-import dateutil.parser
-from flask import Flask, request, redirect, render_template, url_for, session, flash, abort
-import requests
 import hashlib
+import json
+
+import dateutil.parser
+
+from flask import (
+    Flask,
+    request,
+    redirect,
+    render_template,
+    url_for,
+    session,
+    flash,
+    abort,
+    current_app
+)
+
+import requests
+import jinja2
+
 from flask_oauthlib.client import OAuth
+from twilio.rest import TwilioRestClient
+
 import start_organisation.forms as forms
 from start_organisation.order import Order
 from start_organisation import app, oauth
 from decorators import registry_oauth_required
-from twilio.rest import TwilioRestClient
 
 service = {
   "name": "Start organisation",
@@ -31,7 +46,7 @@ registry = oauth.remote_app(
     'registry',
     consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
     consumer_secret=app.config['REGISTRY_CONSUMER_SECRET'],
-    request_token_params={'scope': 'organisation:add'},
+    request_token_params={'scope': 'organisation:add person:view'},
     base_url=app.config['REGISTRY_BASE_URL'],
     request_token_url=None,
     access_token_method='POST',
@@ -68,11 +83,11 @@ def start():
 @registry_oauth_required
 def choose_type():
 
-    # create order
-    order = Order()
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**organisation_data)
+     else:
+        order = Order()
 
     # create form and add options
     form = forms.StartOrganisationTypeForm(request.form)
@@ -88,11 +103,9 @@ def choose_type():
 @app.route("/start/details", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_details():
-
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -109,13 +122,9 @@ def start_details():
 @app.route("/start/invite", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_invite():
-
-    from flask import current_app
-
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -144,11 +153,9 @@ def start_invite():
 @app.route("/start/register", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_register():
-
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -163,10 +170,9 @@ def start_register():
 @app.route("/start/review", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_review():
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 

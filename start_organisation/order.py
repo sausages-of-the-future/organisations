@@ -1,21 +1,10 @@
-class Order():
+class Order(object):
 
-    organisation_type = None
-    name = None
-    activities = None
-    data = {}
+    def __init__(self, **kwargs):
+        self.organisation_type = kwargs.get('organisation_type')
+        self.name = kwargs.get('name')
+        self.activities = kwargs.get('activities', [])
+        self.directors = kwargs.get('directors', [])
 
     def to_dict(self):
-        result = {}
-        result['organisation_type'] = self.organisation_type
-        result['name'] = self.name
-        result['activities'] = self.name
-        return result
-
-    @classmethod
-    def from_dict(cls, data):
-        order = Order()
-        order.organisation_type = data['organisation_type']
-        order.name = data['name']
-        order.activities = data['activities']
-        return order
+        return self.__dict__
