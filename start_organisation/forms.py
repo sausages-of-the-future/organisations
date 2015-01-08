@@ -10,9 +10,9 @@ class StartOrganisationTypeForm(Form):
         ("ordinary-business-partnership", "Ordinary Business Partnership"),
         ("limited-partnership", "Limited Partnership"),
         ("limited-liability-partnership", "Limited Liability Partnership"),
-        ("unincorperated-association", "Unincorperated Association"),
+        ("unincorperated-association", "Unincorporated Association"),
         ("charity", "Charity"),
-        ("charitable-incorperated-organisation", "Charitable Incorperated Organisation"),
+        ("charitable-incorperated-organisation", "Charitable Incorporated Organisation"),
         ("cooperative", "Co-operative"),
         ("industrial-and-provident-society", "Industrial and Provident Society"),
         ("community-interest-company", "Community Interest Company")
