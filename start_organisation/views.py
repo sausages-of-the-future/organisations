@@ -110,6 +110,8 @@ def start_details():
 @registry_oauth_required
 def start_invite():
 
+    from flask import current_app
+
     order = None
     order_data = session.get('order', None)
     if order_data:
@@ -120,6 +122,7 @@ def start_invite():
     form = forms.StartOrganisationInviteForm(request.form)
 
     if request.method == 'POST':
+        current_app.logger.info("POSTED")
         if form.validate():
 
             #send sms
@@ -131,6 +134,10 @@ def start_invite():
 
             #next
             return redirect(url_for('start_register'))
+
+        else:
+            current_app.logger.info("INVALID")
+            current_app.logger.info(form.errors)
 
     return render_template('start-invite.html', form=form)
 

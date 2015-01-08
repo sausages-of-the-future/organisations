@@ -36,17 +36,18 @@
           </li>
           <li class="pending">
             <span>&dash;</span>
-            Your organisation will automatically be registered for <a href="#">VAT</a> once 
+            Your organisation will automatically be registered for <a href="#">VAT</a> once
             its VAT taxable turnover reaches more than &pound;81,000
           </li>
         </ul>
         <hr/>
         <h2>Licences</h2>
         <p>
-          Once your organisation has been created, you will immediatly able to 
+          Once your organisation has been created, you will immediatly able to
           apply for licences.
         </p>
         <button type="submit" class="button expand">Next</button>
+        {{ form.csrf_token }}
       </form>
     </div>
   </div>

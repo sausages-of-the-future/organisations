@@ -13,6 +13,7 @@ class Config(object):
 
 class DevelopmentConfig(Config):
     DEBUG = True
+    WTF_CSRF_ENABLED = False
 
 class TestConfig(DevelopmentConfig):
     TESTING = True

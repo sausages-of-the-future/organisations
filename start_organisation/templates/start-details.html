@@ -14,6 +14,7 @@
         </ul>
          {{ render_field(form.activities) }}
          <button type="submit" class="button expand">Next</button>
+         {{ form.csrf_token }}
       </form>
     </div>
   </div>
