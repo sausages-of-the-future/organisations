@@ -86,7 +86,7 @@ def choose_type():
     order_data = session.get('order', None)
     if order_data:
         order = Order(**organisation_data)
-     else:
+    else:
         order = Order()
 
     # create form and add options
