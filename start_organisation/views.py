@@ -180,9 +180,12 @@ def start_review():
     if request.method == 'POST':
         if form.validate():
             data = {
-                'organisation_type': order.organisation_type,
-                'name': order.name,
-                'activities': order.activities
+                'organisation_type' : order.organisation_type,
+                'name' : order.name,
+                'activities' : order.activities,
+                'register_data' : order.register_data,
+                'register_employer' : order.register_employer,
+                'register_construction' : order.register_construction
             }
 
             response = registry.post('/organisations', data=data, format='json')
