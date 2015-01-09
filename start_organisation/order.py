@@ -5,6 +5,9 @@ class Order(object):
         self.name = kwargs.get('name')
         self.activities = kwargs.get('activities', [])
         self.directors = kwargs.get('directors', [])
+        self.register_data = kwargs.get('register_data', False)
+        self.register_employer = kwargs.get('register_employer', False)
+        self.register_construction = kwargs.get('register_construction', False)
 
     def to_dict(self):
         return self.__dict__

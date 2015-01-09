@@ -131,9 +131,7 @@ def start_invite():
     form = forms.StartOrganisationInviteForm(request.form)
 
     if request.method == 'POST':
-        current_app.logger.info("POSTED")
         if form.validate():
-
             #send sms
             client = TwilioRestClient(app.config['TWILIO_ACCOUNT_ID'], app.config['TWILIO_AUTH_TOKEN'])
             for person in form.people:
@@ -144,9 +142,6 @@ def start_invite():
             #next
             return redirect(url_for('start_register'))
 
-        else:
-            current_app.logger.info("INVALID")
-            current_app.logger.info(form.errors)
 
     return render_template('start-invite.html', form=form)
 
@@ -163,6 +158,10 @@ def start_register():
 
     if request.method == "POST":
         if form.validate():
+            order.register_data = form.register_data.data
+            order.register_employer = form.register_employer.data
+            order.register_construction = form.register_construction.data
+            session['order'] = order.to_dict()
             return redirect(url_for('start_review'))
 
     return render_template('start-register.html', form=form)
