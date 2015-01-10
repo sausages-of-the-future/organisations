@@ -7,7 +7,7 @@
       <form action="" method="post">
         {{ render_field(form.user_is_director) }}
         {{ render_field(form.director_count, type='number') }}
-        <div id="director_contact" class="hide">
+        <div id="director_contact">
           {% for person in form.people %}
               {{person}}
           {% endfor %}

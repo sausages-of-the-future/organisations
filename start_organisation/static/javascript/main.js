@@ -14,12 +14,17 @@ $( document ).ready(function() {
   );
 
   //directors
-  $("#director_count").change(function() {
+  show_hide_invites();
+  function show_hide_invites(){
     if ($("#director_count").val() && $("#director_count").val() > 0){
       $('#director_contact').show();
     }else{
       $('#director_contact').hide();
     }
+  }
+
+  $("#director_count").change(function() {
+    show_hide_invites();
   });
 
   //done
