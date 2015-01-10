@@ -1,5 +1,6 @@
 import json
-from wtforms import Form, TextField, TextAreaField, RadioField, BooleanField, FormField, IntegerField, FieldList, DateField, SelectField, validators
+from flask_wtf import Form
+from wtforms import TextField, TextAreaField, RadioField, BooleanField, FormField, IntegerField, FieldList, DateField, SelectField, validators
 from wtforms.fields import html5
 
 class StartOrganisationTypeForm(Form):
@@ -9,9 +10,9 @@ class StartOrganisationTypeForm(Form):
         ("ordinary-business-partnership", "Ordinary Business Partnership"),
         ("limited-partnership", "Limited Partnership"),
         ("limited-liability-partnership", "Limited Liability Partnership"),
-        ("unincorperated-association", "Unincorperated Association"),
+        ("unincorperated-association", "Unincorporated Association"),
         ("charity", "Charity"),
-        ("charitable-incorperated-organisation", "Charitable Incorperated Organisation"),
+        ("charitable-incorperated-organisation", "Charitable Incorporated Organisation"),
         ("cooperative", "Co-operative"),
         ("industrial-and-provident-society", "Industrial and Provident Society"),
         ("community-interest-company", "Community Interest Company")
@@ -33,10 +34,10 @@ class PersonForm(Form):
     phone = html5.TelField('Phone number', validators=[validators.required()])
 
 class StartOrganisationInviteForm(Form):
-    user_is_director = SelectField('Are you one of the directors?', choices=[("True", "Yes"), ("False", "No")])    
+    user_is_director = SelectField('Are you one of the directors?', choices=[("True", "Yes"), ("False", "No")])
     director_count = SelectField("Other than yourself - how many other directors are there?", choices=[("0", "0"), ("1", "1"),("2", "2"), ("3", "3"),("4", "4"),("5", "5")], default=0)
     method = RadioField("", default="sms", choices=[("sms", "Send codes as a text message"), ("print", "Print one-use codes")])
-    people = FieldList(FormField(PersonForm), min_entries=1)
+    people = FieldList(FormField(PersonForm), min_entries=0)
 
 class StartOrganisationReviewForm(Form):
     confirm = BooleanField("I confirm that the details above are correct (it is an offence to provide information which you know to be incorrect.)", validators=[validators.DataRequired("You must confirm that the details are correct (it is an offence to provide information which you know to be incorrect.)")])

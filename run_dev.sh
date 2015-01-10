@@ -1,2 +1,3 @@
 #!/bin/bash
-python run_dev.py
+
+python3 run_dev.py

@@ -6,18 +6,33 @@
      <h2>Review details</h2>
      <div class="panel">
         <i class="fa fa-bookmark fa-4x"></i>
-       <h5>{{order.name}}</h5> 
+       <h5>{{order.name}}</h5>
        <hr/>
        <dl>
          <dt>Organisation type</dt>
          <dd>{{order.organisation_type.replace('-',' ')}}</dd>
          <dt>Activities</dt>
          <dd>{{order.activities}}</dd>
+
+         {% if order.register_data or order.register_employer or order.register_construction %}
+          <dt>Registrations</dt>
+           {% if order.register_data %}
+              <dd>Data Protection</dd>
+           {% endif %}
+           {% if order.register_employer %}
+              <dd>Employent &amp; PAYE</dd>
+           {% endif %}
+           {% if order.register_construction %}
+              <dd>Payment of subcontractors for construction work</dd>
+           {% endif %}
+         {% endif %}
+
        </dl>
      </div>
      <form action="" method="post">
         {{ render_checkbox(form.confirm) }}
         <button type="submit" class="button expand">Create organisation</button>
+        {{ form.csrf_token }}
       </form>
     </div>
   </div>

@@ -15,7 +15,7 @@
           {{render_checkbox(form.register_employer)}}
         </p>
         <p class="hint">
-           This includes if you’re employing yourself eg as the only director of a limited company.
+           This includes if you’re employing yourself e.g. as the only director of a limited company.
         </p>
         <p>
           {{render_checkbox(form.register_construction)}}
@@ -28,7 +28,7 @@
         <ul class="verified-facts">
           <li>
             <span>&#10003;</span>
-            Your organisation will be registered for <a href="#">Corperation tax</a>
+            Your organisation will be registered for <a href="#">Corporation tax</a>
           </li>
           <li>
             <span>&#10003;</span>
@@ -36,17 +36,18 @@
           </li>
           <li class="pending">
             <span>&dash;</span>
-            Your organisation will automatically be registered for <a href="#">VAT</a> once 
+            Your organisation will automatically be registered for <a href="#">VAT</a> once
             its VAT taxable turnover reaches more than &pound;81,000
           </li>
         </ul>
         <hr/>
         <h2>Licences</h2>
         <p>
-          Once your organisation has been created, you will immediatly able to 
+          Once your organisation has been created, you will immediately able to
           apply for licences.
         </p>
         <button type="submit" class="button expand">Next</button>
+        {{ form.csrf_token }}
       </form>
     </div>
   </div>

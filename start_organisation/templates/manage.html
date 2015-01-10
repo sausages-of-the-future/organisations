@@ -21,19 +21,16 @@
 
       <hr/>
 
-      <h3>Directors and officers <a href="#" class="button tiny right">Ammend</a></h3>
+      <h3>Directors and officers <a href="#" class="button tiny right">Amend</a></h3>
       <ul>
-        <li>
-          Karen Smith &mdash; Director
-        </li>
-        <li>
-          Simon Calver &mdash; Director
-        </li>
+          {% for director in organisation.directors %}
+          <li>{{ director }} &mdash; Director</li>
+        {% endfor %}
       </ul>
 
       <hr/>
 
-      <h3>Registered address <a href="#" class="right button tiny">Ammend</a></h3>
+      <h3>Registered address <a href="#" class="right button tiny">Amend</a></h3>
       <p>
         Transworld House, 100 City Road, London, EC1Y 2BP
       </p>

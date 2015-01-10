@@ -1,16 +1,31 @@
 import os
-import jinja2
-import json
-import dateutil.parser
-from flask import Flask, request, redirect, render_template, url_for, session, flash, abort
-import requests
 import hashlib
+import json
+
+import dateutil.parser
+
+from flask import (
+    Flask,
+    request,
+    redirect,
+    render_template,
+    url_for,
+    session,
+    flash,
+    abort,
+    current_app
+)
+
+import requests
+import jinja2
+
 from flask_oauthlib.client import OAuth
+from twilio.rest import TwilioRestClient
+
 import start_organisation.forms as forms
 from start_organisation.order import Order
 from start_organisation import app, oauth
 from decorators import registry_oauth_required
-from twilio.rest import TwilioRestClient
 
 service = {
   "name": "Start organisation",
@@ -31,7 +46,7 @@ registry = oauth.remote_app(
     'registry',
     consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
     consumer_secret=app.config['REGISTRY_CONSUMER_SECRET'],
-    request_token_params={'scope': 'organisation:add'},
+    request_token_params={'scope': 'organisation:add person:view'},
     base_url=app.config['REGISTRY_BASE_URL'],
     request_token_url=None,
     access_token_method='POST',
@@ -68,11 +83,11 @@ def start():
 @registry_oauth_required
 def choose_type():
 
-    # create order
-    order = Order()
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**organisation_data)
+    else:
+        order = Order()
 
     # create form and add options
     form = forms.StartOrganisationTypeForm(request.form)
@@ -88,11 +103,9 @@ def choose_type():
 @app.route("/start/details", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_details():
-
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -109,11 +122,9 @@ def start_details():
 @app.route("/start/invite", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_invite():
-
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -121,7 +132,6 @@ def start_invite():
 
     if request.method == 'POST':
         if form.validate():
-
             #send sms
             client = TwilioRestClient(app.config['TWILIO_ACCOUNT_ID'], app.config['TWILIO_AUTH_TOKEN'])
             for person in form.people:
@@ -132,16 +142,15 @@ def start_invite():
             #next
             return redirect(url_for('start_register'))
 
+
     return render_template('start-invite.html', form=form)
 
 @app.route("/start/register", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_register():
-
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -149,6 +158,10 @@ def start_register():
 
     if request.method == "POST":
         if form.validate():
+            order.register_data = form.register_data.data
+            order.register_employer = form.register_employer.data
+            order.register_construction = form.register_construction.data
+            session['order'] = order.to_dict()
             return redirect(url_for('start_review'))
 
     return render_template('start-register.html', form=form)
@@ -156,10 +169,9 @@ def start_register():
 @app.route("/start/review", methods=['GET', 'POST'])
 @registry_oauth_required
 def start_review():
-    order = None
     order_data = session.get('order', None)
     if order_data:
-        order = Order.from_dict(order_data)
+        order = Order(**order_data)
     else:
         return redirect(url_for('start_type'))
 
@@ -168,9 +180,12 @@ def start_review():
     if request.method == 'POST':
         if form.validate():
             data = {
-                'organisation_type': order.organisation_type,
-                'name': order.name,
-                'activities': order.activities
+                'organisation_type' : order.organisation_type,
+                'name' : order.name,
+                'activities' : order.activities,
+                'register_data' : order.register_data,
+                'register_employer' : order.register_employer,
+                'register_construction' : order.register_construction
             }
 
             response = registry.post('/organisations', data=data, format='json')
