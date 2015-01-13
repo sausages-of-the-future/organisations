@@ -135,6 +135,7 @@ def start_invite():
             #send sms
             client = TwilioRestClient(app.config['TWILIO_ACCOUNT_ID'], app.config['TWILIO_AUTH_TOKEN'])
             for person in form.people:
+                order.directors.append(person.fullname.data)
                 if person.phone.data:
                     message = "Please visit Idealgov and enter the following code to verify you wish to become a director of '%s': %s" % (order.name, make_random_token())
                     client.sms.messages.create(to=person.phone.data, from_=app.config['TWILLIO_PHONE_NUMBER'], body=message)
@@ -187,7 +188,8 @@ def start_review():
                 'activities' : order.activities,
                 'register_data' : order.register_data,
                 'register_employer' : order.register_employer,
-                'register_construction' : order.register_construction
+                'register_construction' : order.register_construction,
+                'directors' : order.directors
             }
 
             response = registry.post('/organisations', data=data, format='json')

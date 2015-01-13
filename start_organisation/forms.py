@@ -29,7 +29,7 @@ class StartOrganisationRegistrationForm(Form):
     register_construction = BooleanField("Will the organisation pay subcontractors to do construction work?")
 
 class PersonForm(Form):
-    name = TextField('Name', validators=[validators.required()])
+    fullname = TextField('Name', validators=[validators.required()])
     position = TextField('Position', validators=[validators.required()])
     phone = html5.TelField('Phone number', validators=[validators.required()])
 
