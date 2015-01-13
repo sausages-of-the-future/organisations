@@ -37,7 +37,7 @@ class StartOrganisationInviteForm(Form):
     user_is_director = SelectField('Are you one of the directors?', choices=[("True", "Yes"), ("False", "No")])
     director_count = SelectField("Other than yourself - how many other directors are there?", choices=[("0", "0"), ("1", "1"),("2", "2"), ("3", "3"),("4", "4"),("5", "5")], default=0)
     method = RadioField("", default="sms", choices=[("sms", "Send codes as a text message"), ("print", "Print one-use codes")])
-    people = FieldList(FormField(PersonForm), min_entries=1)
+    people = FieldList(FormField(PersonForm), min_entries=0)
 
 class StartOrganisationReviewForm(Form):
     confirm = BooleanField("I confirm that the details above are correct (it is an offence to provide information which you know to be incorrect.)", validators=[validators.DataRequired("You must confirm that the details are correct (it is an offence to provide information which you know to be incorrect.)")])

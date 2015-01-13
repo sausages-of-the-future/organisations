@@ -141,6 +141,8 @@ def start_invite():
 
             #next
             return redirect(url_for('start_register'))
+        else:
+            current_app.logger.info('invalid form%s' % form.errors)
 
 
     return render_template('start-invite.html', form=form)
