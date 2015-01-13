@@ -8,9 +8,6 @@
         {{ render_field(form.user_is_director) }}
         {{ render_field(form.director_count, type='number') }}
         <div id="director_contact">
-          {% for person in form.people %}
-              {{person}}
-          {% endfor %}
           <p>
             Each person will need to enter a one-use code, then sign in to register as directors</em>.
           </p>
