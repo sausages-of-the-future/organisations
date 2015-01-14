@@ -10,10 +10,10 @@ class Config(object):
     TWILIO_ACCOUNT_ID = os.environ['TWILIO_ACCOUNT_ID']
     TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
     TWILLIO_PHONE_NUMBER = os.environ['TWILLIO_PHONE_NUMBER']
+    WTF_CSRF_ENABLED = False
 
 class DevelopmentConfig(Config):
     DEBUG = True
-    WTF_CSRF_ENABLED = False
 
 class TestConfig(DevelopmentConfig):
     TESTING = True
