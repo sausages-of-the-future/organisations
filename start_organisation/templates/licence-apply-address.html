@@ -1,0 +1,9 @@
+{% extends "base_transaction.html" %}
+{% block title %}Types of organisation{% endblock %}
+{% block transaction_content %}
+  <div class="row">
+    <div class="small-12 columns">
+        <a class="button expand" href="{{url_for('licence_apply_done', organisation_id=organisation.uri.split('/')[-1])}}">Next</a>    
+    </div>
+  </div>
+{% endblock %}

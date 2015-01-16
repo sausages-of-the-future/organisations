@@ -228,6 +228,42 @@ def manage_organisation(organisation_id):
 
     return render_template("manage.html", organisation=organisation, service=service)
 
+#apply for a licence
+@app.route("/manage/<organisation_id>/licences/apply")
+def licence_apply_type(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    return render_template("licence-apply-type.html", organisation=organisation)
+
+#apply for a licence
+@app.route("/manage/<organisation_id>/licences/apply/address")
+def licence_apply_address(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    return render_template("licence-apply-address.html", organisation=organisation)
+
+@app.route("/manage/<organisation_id>/licences/apply/done")
+def licence_apply_done(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    return render_template("licence-apply-done.html", organisation=organisation)
+
+
 @app.route('/verify')
 def verify():
     _scheme = 'https'
