@@ -3,7 +3,26 @@
 {% block transaction_content %}
   <div class="row">
     <div class="small-12 columns">
-        <a class="button expand" href="{{url_for('licence_apply_done', organisation_id=organisation.uri.split('/')[-1])}}">Next</a>    
+      <p>What address do you require the licences for?</p>
+      <form action="" method="post">
+        <ul>
+          <li>
+            <label>
+              <input type="radio" name="address" selected="selected"/>
+              Transworld House, 100 City Road, London, EC1Y 2BP
+              (Your registered address)
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="radio" name="address" />
+              Another address
+            </label>
+            <input type="search" disabled="disabled"/> 
+          </li>
+        </ul>
+        <button class="button expand" type="submit">Next</button>
+      </form>
     </div>
   </div>
 {% endblock %}

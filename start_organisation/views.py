@@ -231,7 +231,7 @@ def manage_organisation(organisation_id):
     return render_template("manage.html", organisation=organisation, service=service)
 
 #apply for a licence
-@app.route("/manage/<organisation_id>/licences/apply")
+@app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])
 def licence_apply_type(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
@@ -240,10 +240,13 @@ def licence_apply_type(organisation_id):
     else:
         abort(404)
 
+    if request.method == 'POST':
+        return redirect(url_for('licence_apply_address', organisation_id=organisation_id))
+
     return render_template("licence-apply-type.html", organisation=organisation)
 
 #apply for a licence
-@app.route("/manage/<organisation_id>/licences/apply/address")
+@app.route("/manage/<organisation_id>/licences/apply/address", methods=['GET', 'POST'])
 def licence_apply_address(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
@@ -251,7 +254,9 @@ def licence_apply_address(organisation_id):
         organisation = response.json()
     else:
         abort(404)
-
+    
+    if request.method == 'POST':
+        return redirect(url_for('licence_apply_done', organisation_id=organisation_id))
     return render_template("licence-apply-address.html", organisation=organisation)
 
 @app.route("/manage/<organisation_id>/licences/apply/done")

@@ -3,7 +3,10 @@
 {% block transaction_content %}
   <div class="row">
     <div class="small-12 columns">
-      <a class="button expand" href="{{url_for('manage_organisation', organisation_id=organisation.uri.split('/')[-1])}}">Next</a>
+      <div class="done panel">
+          Your applications have been submitted
+      </div>
+      <a class="button expand" href="{{url_for('manage_organisation', organisation_id=organisation.uri.split('/')[-1])}}">Back to {{organisation.name}}</a>
     </div>
   </div>
 {% endblock %}

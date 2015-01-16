@@ -1,9 +1,22 @@
 {% extends "base_transaction.html" %}
 {% block title %}Types of organisation{% endblock %}
+{% block header_title %}<a href="/">Apply for licences</a>{% endblock %}
 {% block transaction_content %}
   <div class="row">
     <div class="small-12 columns">
-        <a class="button expand" href="{{url_for('licence_apply_address', organisation_id=organisation.uri.split('/')[-1])}}">Next</a>
+      <p>
+        Based on the business activities of <strong>{{organisation.name}}</strong>, you may want to apply for the following licences:
+      </p>
+      <form action="" method ="post">
+        <ul>
+          <li><label><input type="checkbox"> Use CCTV systems</label></li>
+          <li><label><input type="checkbox"> Discharge trade effluent</label></li>
+          <li><label><input type="checkbox"> Put tables or chairs on the pavement</label></li>
+          <li><label><input type="checkbox"> Sell alcoholic drinks</label></li>
+          <li><label><a href="#">add more ...</a><li>
+        </ul>
+        <button class="expand button" type="submit">Next</button>
+      </form>
     </div>
   </div>
 {% endblock %}
