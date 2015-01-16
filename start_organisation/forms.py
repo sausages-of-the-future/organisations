@@ -1,4 +1,5 @@
 import json
+import wtforms
 from flask_wtf import Form
 from wtforms import TextField, TextAreaField, RadioField, BooleanField, FormField, IntegerField, FieldList, DateField, SelectField, validators
 from wtforms.fields import html5
@@ -28,8 +29,16 @@ class StartOrganisationRegistrationForm(Form):
     register_employer = BooleanField("Will the organisation be employing people? (Employer register and PAYE Tax)")
     register_construction = BooleanField("Will the organisation pay subcontractors to do construction work?")
 
-class PersonForm(Form):
-    name = TextField('Name', validators=[validators.required()])
+class PersonForm(wtforms.form.Form):
+
+    # this form inherits from wtforms.form.Form rather than
+    # flask_wtf.Form. The latter is actually a secure form
+    # which would mean each Person form in the Fieldist
+    # of StartOrganisationInviteForm would need a csrf_token of their own
+    # and the forms are constructed client side.
+    # http://stackoverflow.com/questions/15649027/wtforms-csrf-flask-fieldlist
+
+    fullname = TextField('Name', validators=[validators.required()])
     position = TextField('Position', validators=[validators.required()])
     phone = html5.TelField('Phone number', validators=[validators.required()])
 

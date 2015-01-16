@@ -16,9 +16,15 @@ $( document ).ready(function() {
   //directors
   show_hide_invites();
   function show_hide_invites(){
+
+    $('#director_contact table').remove();
+
     if ($("#director_count").val() && $("#director_count").val() > 0){
+     for(i=0; i<$("#director_count").val(); i++){
+       $('#director_contact').append("<table id='people-"+i+"'><tr><th><label for='people-"+i+"-fullname'>Name</label></th><td><input id='people-"+i+"-fullname' name='people-"+i+"-fullname' type='text' value=''></td></tr><tr><th><label for='people-"+i+"-position'>Position</label></th><td><input id='people-"+i+"-position' name='people-"+i+"-position' type='text' value=''></td></tr><tr><th><label for='people-"+i+"-phone'>Phone number</label></th><td><input id='people-"+i+"-phone' name='people-"+i+"-phone' type='tel' value=''></td></tr></table>");
+     }
       $('#director_contact').show();
-    }else{
+    } else {
       $('#director_contact').hide();
     }
   }
