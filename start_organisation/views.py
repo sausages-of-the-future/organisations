@@ -240,10 +240,20 @@ def licence_apply_type(organisation_id):
     else:
         abort(404)
 
-    if request.method == 'POST':
+    form = forms.LicenceApplicationForm(request.form)
+    if form.validate_on_submit():
+        licences = []
+        for fieldname, value in form.data.items():
+            if value:
+                licences.append({"type": fieldname, "subject_uri" : organisation['uri']})
+
+        #TODO if no licences noop
+
+        session['licences'] = licences
+
         return redirect(url_for('licence_apply_address', organisation_id=organisation_id))
 
-    return render_template("licence-apply-type.html", organisation=organisation)
+    return render_template("licence-apply-type.html", organisation=organisation, form=form)
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply/address", methods=['GET', 'POST'])
@@ -254,8 +264,13 @@ def licence_apply_address(organisation_id):
         organisation = response.json()
     else:
         abort(404)
-    
+
     if request.method == 'POST':
+
+        #TODO create address form, and send along with license applications
+
+        session.pop('licences', None)
+
         return redirect(url_for('licence_apply_done', organisation_id=organisation_id))
     return render_template("licence-apply-address.html", organisation=organisation)
 

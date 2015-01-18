@@ -9,13 +9,13 @@
       </p>
       <form action="" method ="post">
         <ul>
-          <li><label><input type="checkbox"> Use CCTV systems</label></li>
-          <li><label><input type="checkbox"> Discharge trade effluent</label></li>
-          <li><label><input type="checkbox"> Put tables or chairs on the pavement</label></li>
-          <li><label><input type="checkbox"> Sell alcoholic drinks</label></li>
-          <li><label><a href="#">add more ...</a><li>
+          <li>{{ render_checkbox(form.use_cctv) }}</li>
+          <li>{{ render_checkbox(form.discharge_effluent) }}</li>
+          <li>{{ render_checkbox(form.tables_chairs_on_pavement) }}</li>
+          <li>{{ render_checkbox(form.sell_alcohol) }}</li>
         </ul>
-        <button class="expand button" type="submit">Next</button>
+          {{ form.csrf_token }}
+          <button class="expand button" type="submit">Next</button>
       </form>
     </div>
   </div>
