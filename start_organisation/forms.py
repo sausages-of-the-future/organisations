@@ -5,7 +5,7 @@ from wtforms import TextField, TextAreaField, RadioField, BooleanField, FormFiel
 from wtforms.fields import html5
 
 class StartOrganisationTypeForm(Form):
-    organisaiton_types = [
+    organisation_types = [
         ("public-limited-company", "Public Limited Company"),
         ("private-limited-company", "Private company limited by guarantee"),
         ("ordinary-business-partnership", "Ordinary Business Partnership"),
@@ -18,7 +18,7 @@ class StartOrganisationTypeForm(Form):
         ("industrial-and-provident-society", "Industrial and Provident Society"),
         ("community-interest-company", "Community Interest Company")
     ]
-    organisation_type = RadioField('Organisation type', choices=organisaiton_types, validators=[validators.required()])
+    organisation_type = RadioField('Organisation type', choices=organisation_types, validators=[validators.required()])
 
 class StartOrganisationDetailsForm(Form):
     name = TextField('Organisation name', validators=[validators.required()])
@@ -59,4 +59,6 @@ class LicenceApplicationForm(Form):
 
 
 class LicenceAddressForm(Form):
-    pass
+
+    licence_address = RadioField('What address do you require the licences for?', validators=[validators.required()])
+

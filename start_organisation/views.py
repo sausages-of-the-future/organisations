@@ -46,7 +46,7 @@ registry = oauth.remote_app(
     'registry',
     consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
     consumer_secret=app.config['REGISTRY_CONSUMER_SECRET'],
-    request_token_params={'scope': 'organisation:add person:view'},
+    request_token_params={'scope': 'organisation:add person:view notice:add'},
     base_url=app.config['REGISTRY_BASE_URL'],
     request_token_url=None,
     access_token_method='POST',
@@ -189,7 +189,8 @@ def start_review():
                 'register_data' : order.register_data,
                 'register_employer' : order.register_employer,
                 'register_construction' : order.register_construction,
-                'directors' : order.directors
+                'directors' : order.directors,
+                'full_address': 'Transworld House, 100 Borchester City Road, Borchester, BO1Y 2BP' #TODO - address form for org create
             }
 
             response = registry.post('/organisations', data=data, format='json')
@@ -207,6 +208,7 @@ def start_done():
     return render_template('start-done.html')
 
 @app.route("/manage")
+@registry_oauth_required
 def manage():
     #for now, just redirect to the last one that was created
     uri = "%s/organisations" % app.config['REGISTRY_BASE_URL']
@@ -220,6 +222,7 @@ def manage():
         abort(404)
 
 @app.route("/manage/<organisation_id>")
+@registry_oauth_required
 def manage_organisation(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
@@ -232,6 +235,7 @@ def manage_organisation(organisation_id):
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])
+@registry_oauth_required
 def licence_apply_type(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
@@ -245,10 +249,9 @@ def licence_apply_type(organisation_id):
         licences = []
         for fieldname, value in form.data.items():
             if value:
-                licences.append({"type": fieldname, "subject_uri" : organisation['uri']})
+                licences.append({"licence_type": fieldname})
 
         #TODO if no licences noop
-
         session['licences'] = licences
 
         return redirect(url_for('licence_apply_address', organisation_id=organisation_id))
@@ -257,6 +260,7 @@ def licence_apply_type(organisation_id):
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply/address", methods=['GET', 'POST'])
+@registry_oauth_required
 def licence_apply_address(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
@@ -265,16 +269,34 @@ def licence_apply_address(organisation_id):
     else:
         abort(404)
 
-    if request.method == 'POST':
+    form = forms.LicenceAddressForm(request.form)
+    form.licence_address.choices = [('registered-address', organisation['full_address']), ("another-address", "Another address")]
 
-        #TODO create address form, and send along with license applications
+    if form.validate_on_submit():
+        licences = session.get('licences', [])
+        if licences:
+            if form.licence_address.data == 'registered-address':
+                licence_address = organisation['full_address']
+            # else actually implement other address part of form
+            # and get those details but for now hard code some default
+            else:
+                licence_address = "Transworld House, 100 City Road, London, EC1Y 2BP"
 
-        session.pop('licences', None)
+            data = {"subject_uri": organisation['uri'],
+                    "licence_address": licence_address,
+                    "licences": licences }
 
-        return redirect(url_for('licence_apply_done', organisation_id=organisation_id))
-    return render_template("licence-apply-address.html", organisation=organisation)
+            response = registry.post('/notices', data=data, format='json')
+            session.pop('licences', None)
+            return redirect(url_for('licence_apply_done', organisation_id=organisation_id))
+        else:
+            current_app.logger.info('we should not be here')
+            return redirect(url_for('licence_apply_address', organisation_id=organisation_id))
+
+    return render_template("licence-apply-address.html", organisation=organisation, form=form)
 
 @app.route("/manage/<organisation_id>/licences/apply/done")
+@registry_oauth_required
 def licence_apply_done(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
