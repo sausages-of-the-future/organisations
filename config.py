@@ -10,6 +10,7 @@ class Config(object):
     TWILIO_ACCOUNT_ID = os.environ['TWILIO_ACCOUNT_ID']
     TWILIO_AUTH_TOKEN = os.environ['TWILIO_AUTH_TOKEN']
     TWILLIO_PHONE_NUMBER = os.environ['TWILLIO_PHONE_NUMBER']
+    LOCALGOV_BASE_URL = os.environ['LOCALGOV_BASE_URL']
 
 class DevelopmentConfig(Config):
     DEBUG = True

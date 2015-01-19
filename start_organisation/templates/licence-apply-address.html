@@ -5,22 +5,8 @@
     <div class="small-12 columns">
       <p>What address do you require the licences for?</p>
       <form action="" method="post">
-        <ul>
-          <li>
-            <label>
-              <input type="radio" name="address" selected="selected"/>
-              Transworld House, 100 City Road, London, EC1Y 2BP
-              (Your registered address)
-            </label>
-          </li>
-          <li>
-            <label>
-              <input type="radio" name="address" />
-              Another address
-            </label>
-            <input type="search" disabled="disabled"/> 
-          </li>
-        </ul>
+        {{ form.licence_address }}
+        {{ form.csrf_token }}
         <button class="button expand" type="submit">Next</button>
       </form>
     </div>
