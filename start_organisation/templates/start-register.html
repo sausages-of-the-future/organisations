@@ -27,25 +27,18 @@
         <h2>Taxes</h2>
         <ul class="verified-facts">
           <li>
-            <span>&#10003;</span>
-            Your organisation will be registered for <a href="#">Corporation tax</a>
+            Your organisation will be registered for Corporation tax (<a href="">Don't do this</a>)
           </li>
           <li>
-            <span>&#10003;</span>
-            Directors will automatically be registered for <a href="#">Self Assessment</a>
+            Directors will automatically be registered for Self Assessment
+            (<a href="">Don't do this</a>)
           </li>
-          <li class="pending">
-            <span>&dash;</span>
-            Your organisation will automatically be registered for <a href="#">VAT</a> once
+          <li>
+            Your organisation will automatically be registered for VAT once
             its VAT taxable turnover reaches more than &pound;81,000
           </li>
         </ul>
         <hr/>
-        <h2>Licences</h2>
-        <p>
-          Once your organisation has been created, you will immediately able to
-          apply for licences.
-        </p>
         <button type="submit" class="button expand">Next</button>
         {{ form.csrf_token }}
       </form>
