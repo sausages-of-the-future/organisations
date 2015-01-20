@@ -42,6 +42,8 @@ service = {
   ]
 }
 
+licene_types = {'use_cctv': 'test'}
+
 registry = oauth.remote_app(
     'registry',
     consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
@@ -246,9 +248,9 @@ def licence_apply_type(organisation_id):
     form = forms.LicenceApplicationForm(request.form)
     if form.validate_on_submit():
         licences = []
-        for fieldname, value in form.data.items():
-            if value:
-                licences.append({"licence_type": fieldname})
+        for field in form:
+            if field.type == "BooleanField" and field.data:
+                licences.append({"licence_type": field.description})
 
         #TODO if no licences noop
         session['licences'] = licences
@@ -282,6 +284,7 @@ def licence_apply_address(organisation_id):
                 licence_address = "Transworld House, 100 City Road, London, EC1Y 2BP"
 
             data = {"subject_uri": organisation['uri'],
+                    "subject_name": organisation['name'],
                     "licence_address": licence_address,
                     "licences": licences }
 

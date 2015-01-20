@@ -52,11 +52,10 @@ class StartOrganisationReviewForm(Form):
     confirm = BooleanField("I confirm that the details above are correct (it is an offence to provide information which you know to be incorrect.)", validators=[validators.DataRequired("You must confirm that the details are correct (it is an offence to provide information which you know to be incorrect.)")])
 
 class LicenceApplicationForm(Form):
-    use_cctv = BooleanField("Use CCTV systems")
-    discharge_effluent = BooleanField("Discharge trade effluent")
-    tables_chairs_on_pavement = BooleanField("Put tables or chairs on the pavement")
-    sell_alcohol = BooleanField("Sell alcoholic drinks")
-
+    use_cctv = BooleanField("Use CCTV systems", description="Licence to use CCTV systems.")
+    discharge_effluent = BooleanField("Discharge trade effluent", description="Licence to discharge trade effluent.")
+    tables_chairs_on_pavement = BooleanField("Put tables or chairs on the pavement", description="Licence to put tables or chairs on the pavement.")
+    sell_alcohol = BooleanField("Sell alcoholic drinks", description="Licence to sell alcoholic drinks.")
 
 class LicenceAddressForm(Form):
 
