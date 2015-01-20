@@ -67,8 +67,7 @@ def get_registry_oauth_token():
 #views
 @app.route("/")
 def index():
-    return redirect("%s/organisations" % app.config['WWW_BASE_URL'])
-    return redirect(url_for('index'))
+    return redirect("%s" % app.config['WWW_BASE_URL'])
 
 @app.route("/start")
 def start():
@@ -317,19 +316,21 @@ def verify():
 
 @app.route('/verified')
 def verified():
+    try:
+        resp = registry.authorized_response()
 
-    resp = registry.authorized_response()
+        if resp is None:
+            return 'Access denied: reason=%s error=%s' % (
+            request.args['error_reason'],
+            request.args['error_description']
+            )
 
-    if resp is None:
-        return 'Access denied: reason=%s error=%s' % (
-        request.args['error_reason'],
-        request.args['error_description']
-        )
-
-    session['registry_token'] = (resp['access_token'], '')
-    if session.get('resume_url'):
-        return redirect(url_for(session.get('resume_url')))
-    else:
+        session['registry_token'] = (resp['access_token'], '')
+        if session.get('resume_url'):
+            return redirect(url_for(session.get('resume_url')))
+        else:
+            return redirect(url_for('index'))
+    except:
         return redirect(url_for('index'))
 
 
