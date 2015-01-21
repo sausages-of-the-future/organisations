@@ -357,16 +357,17 @@ def verify():
 def verified():
     resp = registry.authorized_response()
     if resp is None:
-    return 'Access denied: reason=%s error=%s' % (
-    request.args['error_reason'],
-    request.args['error_description']
-    )
+        return 'Access denied: reason=%s error=%s' % (
+        request.args['error_reason'],
+        request.args['error_description']
+        )
+
     session['registry_token'] = (resp['access_token'], '')
     if session.get('resume_url'):
-    resume_url = session.get('resume_url')
-    session.pop('resume_url', None)
-    return redirect(resume_url)
+        resume_url = session.get('resume_url')
+        session.pop('resume_url', None)
+        return redirect(resume_url)
     else:
-    return redirect(url_for('index'))
+        return redirect(url_for('index'))
 
 
