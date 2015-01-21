@@ -70,21 +70,15 @@ def get_registry_oauth_token():
 @app.route("/")
 def index():
     return redirect("%s/organisations" % app.config['WWW_BASE_URL'])
-    return redirect(url_for('index'))
 
 @app.route("/start")
+@registry_oauth_required
 def start():
-    session.clear()
-    if not session.get('registry_token', False):
-        session['resume_url'] = 'choose_type'
-        return redirect(url_for('verify'))
-    else:
-        return redirect(url_for('start_type'))
+    return redirect(url_for('choose_type'))
 
 @app.route("/choose-type", methods=['GET', 'POST'])
 @registry_oauth_required
 def choose_type():
-
     order_data = session.get('order', None)
     if order_data:
         order = Order(**organisation_data)
@@ -109,7 +103,7 @@ def start_details():
     if order_data:
         order = Order(**order_data)
     else:
-        return redirect(url_for('start_type'))
+        return redirect(url_for('choose_type'))
 
     form = forms.StartOrganisationDetailsForm(request.form)
 
@@ -128,7 +122,7 @@ def start_invite():
     if order_data:
         order = Order(**order_data)
     else:
-        return redirect(url_for('start_type'))
+        return redirect(url_for('choose_type'))
 
     form = forms.StartOrganisationInviteForm(request.form)
 
@@ -157,7 +151,7 @@ def start_register():
     if order_data:
         order = Order(**order_data)
     else:
-        return redirect(url_for('start_type'))
+        return redirect(url_for('choose_type'))
 
     form = forms.StartOrganisationRegistrationForm(request.form)
 
@@ -178,7 +172,7 @@ def start_review():
     if order_data:
         order = Order(**order_data)
     else:
-        return redirect(url_for('start_type'))
+        return redirect(url_for('choose_type'))
 
     form = forms.StartOrganisationReviewForm(request.form)
 
@@ -226,6 +220,7 @@ def manage():
 @app.route("/manage/<organisation_id>")
 @registry_oauth_required
 def manage_organisation(organisation_id):
+
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
     if response.status_code == 200:
@@ -239,6 +234,9 @@ def manage_organisation(organisation_id):
 @app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])
 @registry_oauth_required
 def licence_apply_type(organisation_id):
+
+    session['resume_url'] = '/manage/'+organisation_id+'/licences/apply'
+
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
     response = requests.get(uri)
     if response.status_code == 200:
@@ -331,7 +329,9 @@ def verified():
 
     session['registry_token'] = (resp['access_token'], '')
     if session.get('resume_url'):
-        return redirect(url_for(session.get('resume_url')))
+        resume_url = session.get('resume_url')
+        session.pop('resume_url', None)
+        return redirect(resume_url)
     else:
         return redirect(url_for('index'))
 
