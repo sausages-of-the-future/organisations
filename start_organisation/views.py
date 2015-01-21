@@ -3,7 +3,6 @@ import hashlib
 import json
 
 import dateutil.parser
-
 from flask import (
     Flask,
     request,
@@ -18,10 +17,8 @@ from flask import (
 
 import requests
 import jinja2
-
 from flask_oauthlib.client import OAuth
 from twilio.rest import TwilioRestClient
-
 import start_organisation.forms as forms
 from start_organisation.order import Order
 from start_organisation import app, oauth
@@ -232,7 +229,43 @@ def manage_organisation(organisation_id):
     else:
         abort(404)
 
-    return render_template("manage.html", organisation=organisation, service=service)
+    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview')
+
+@app.route("/manage/<organisation_id>/licences")
+@registry_oauth_required
+def manage_organisation_licences(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    return render_template("licences.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+
+@app.route("/manage/<organisation_id>/tax")
+@registry_oauth_required
+def manage_organisation_tax(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+
+@app.route("/manage/<organisation_id>/employees")
+@registry_oauth_required
+def manage_organisation_employees(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])

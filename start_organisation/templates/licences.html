@@ -1,0 +1,18 @@
+{% extends "base_service.html" %}
+{% block title %}{{organisation.name}}{% endblock%}
+{% block service_title %} Manage - {{organisation.name}}{% endblock%}
+{% block service_content %}
+  <div class="row">
+    <div class="small-12 columns">
+      <h2>{{organisation.name}}</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class="small-12 columns">
+      {% include "_tabs.html" %}
+      <p>
+        <a class="button expand" href="{{url_for('licence_apply_type', organisation_id=organisation.uri.split('/')[-1])}}">Apply for a licence</a>
+      </p>
+    </div>
+  </div>
+{% endblock %}

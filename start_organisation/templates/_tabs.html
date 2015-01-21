@@ -1,0 +1,21 @@
+<dl class="tabs full-4">
+  <dd{% if selected_tab == 'overview' %} class="active"{% endif %}>
+    <a href="{{url_for('manage_organisation', organisation_id=organisation_id)}}">  Overview
+    </a>
+  </dd>
+  <dd{% if selected_tab == 'licences' %} class="active"{% endif %}>
+    <a href="{{url_for('manage_organisation_licences', organisation_id=organisation_id)}}">
+      Licences
+    </a>
+  </dd>
+  <dd{% if selected_tab == 'tax' %} class="active"{% endif %}>
+    <a href="{{url_for('manage_organisation_tax', organisation_id=organisation_id)}}">
+      Tax
+    </a>
+  </dd>
+  <dd{% if selected_tab == 'employees' %} class="active"{% endif %}>
+    <a href="{{url_for('manage_organisation_employees', organisation_id=organisation_id)}}">
+      Employees
+    </a>
+  </dd>
+</dl>
