@@ -66,11 +66,7 @@ def get_registry_oauth_token():
 #views
 @app.route("/")
 def index():
-<<<<<<< HEAD
-    return redirect("%s" % app.config['WWW_BASE_URL'])
-=======
     return redirect("%s/organisations" % app.config['WWW_BASE_URL'])
->>>>>>> fb1c9c6b0c4935d64471dbda3c53f11402f91340
 
 @app.route("/start")
 @registry_oauth_required
