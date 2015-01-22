@@ -381,18 +381,17 @@ def verified():
 # don't let then break stuff. swallow exceptions and carry on
 def _get_todos(organisation_id):
     import sys
+    all_todos = []
     try:
         todos = redis_client.get(organisation_id)
         if todos:
             import pickle
-            todos = pickle.loads(todos)
-        else:
-            todos = []
+            all_todos = pickle.loads(todos)
     except:
         current_app.logger.info('something bad but carry on')
         current_app.logger.info(sys.exc_info()[0])
+    return all_todos
 
-    return todos
 
 def _set_todos(organisation_id, licences):
     try:
