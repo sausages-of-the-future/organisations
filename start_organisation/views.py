@@ -390,8 +390,8 @@ def _get_todos(organisation_id):
     except:
         current_app.logger.info('something bad but carry on')
         current_app.logger.info(sys.exc_info()[0])
-    finally:
-        return todos
+
+    return todos
 
 def _set_todos(organisation_id, licences):
     try:
