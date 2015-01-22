@@ -394,8 +394,9 @@ def _get_todos(organisation_id):
 
 
 def _set_todos(organisation_id, licences):
+    import pickle
+    import sys
     try:
-        import pickle
         redis_client.set(organisation_id, pickle.dumps(licences))
     except:
         current_app.logger.info('something bad but carry on')
