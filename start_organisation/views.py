@@ -24,6 +24,8 @@ from start_organisation.order import Order
 from start_organisation import app, oauth
 from decorators import registry_oauth_required
 
+from start_organisation import redis_client
+
 service = {
   "name": "Start organisation",
   "minister": "Minister for business",
@@ -136,7 +138,7 @@ def start_invite():
             #next
             return redirect(url_for('start_register'))
         else:
-            current_app.logger.info('invalid form%s' % form.errors)
+            current_app.logger.info('invalid form %s' % form.errors)
 
 
     return render_template('start-invite.html', form=form)
@@ -225,7 +227,9 @@ def manage_organisation(organisation_id):
     else:
         abort(404)
 
-    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview')
+    todos = _get_todos(organisation_id)
+
+    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview', todos=todos)
 
 @app.route("/manage/<organisation_id>/licences")
 @registry_oauth_required
@@ -321,8 +325,14 @@ def licence_apply_address(organisation_id):
                     "licences": licences }
 
             response = registry.post('/notices', data=data, format='json')
+
+            _set_todos(organisation_id, licences)
+
             session.pop('licences', None)
+
             return redirect(url_for('licence_apply_done', organisation_id=organisation_id))
+
+
         else:
             current_app.logger.info('we should not be here')
             return redirect(url_for('licence_apply_address', organisation_id=organisation_id))
@@ -365,5 +375,31 @@ def verified():
         return redirect(resume_url)
     else:
         return redirect(url_for('index'))
+
+
+# These are just to hook up some notifications and
+# don't let then break stuff. swallow exceptions and carry on
+def _get_todos(organisation_id):
+    try:
+        todos = redis_client.get(organisation_id)
+        if todos:
+            import pickle
+            todos = pickle.loads(todos)
+        else:
+            todos = []
+    except:
+        current_app.logger.info('something bad but carry on')
+        current_app.logger.info(sys.exc_info()[0])
+    finally:
+        return todos
+
+def _set_todos(organisation_id, licences):
+    try:
+        import pickle
+        redis_client.set(organisation_id, pickle.dumps(licences))
+    except:
+        current_app.logger.info('something bad but carry on')
+        current_app.logger.info(sys.exc_info()[0])
+
 
 

@@ -8,6 +8,8 @@ app = Flask(__name__)
 app.config.from_object(os.environ.get('SETTINGS'))
 oauth = OAuth(app)
 
+import redis
+redis_client = redis.from_url(app.config.get('REDISCLOUD_URL', 'redis://user:@localhost:6379'))
 
 if 'SENTRY_DSN' in os.environ:
     from raven.contrib.flask import Sentry
