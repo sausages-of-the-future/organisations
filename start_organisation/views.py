@@ -78,7 +78,7 @@ def start():
 def choose_type():
     order_data = session.get('order', None)
     if order_data:
-        order = Order(**organisation_data)
+        order = Order(**order_data)
     else:
         order = Order()
 
