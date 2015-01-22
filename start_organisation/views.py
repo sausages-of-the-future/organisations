@@ -380,6 +380,7 @@ def verified():
 # These are just to hook up some notifications and
 # don't let then break stuff. swallow exceptions and carry on
 def _get_todos(organisation_id):
+    import sys
     try:
         todos = redis_client.get(organisation_id)
         if todos:
