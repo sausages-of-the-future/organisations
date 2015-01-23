@@ -70,7 +70,7 @@
           Notification settings</a>
           </li>
           <li>
-            <a href="#"><span class="round alert label">{{todos | length}}</span> To do list</a>
+            <a href="{{ url_for('todo_list', organisation_id=organisation_id) }}">{% if todos %}<span class="round alert label">{{todos | length}}</span>{% endif %} To do list</a>
           </li>
         </ul>
       </aside>

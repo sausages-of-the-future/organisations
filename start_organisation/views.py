@@ -241,7 +241,10 @@ def manage_organisation_licences(organisation_id):
     else:
         abort(404)
 
-    return render_template("licences.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+    todos = _get_todos(organisation_id)
+
+    return render_template("licences.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences', todos=todos)
+
 
 @app.route("/manage/<organisation_id>/tax")
 @registry_oauth_required
@@ -253,7 +256,9 @@ def manage_organisation_tax(organisation_id):
     else:
         abort(404)
 
-    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+    todos = _get_todos(organisation_id)
+
+    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences', todos=todos)
 
 @app.route("/manage/<organisation_id>/employees")
 @registry_oauth_required
@@ -265,7 +270,9 @@ def manage_organisation_employees(organisation_id):
     else:
         abort(404)
 
-    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+    todos = _get_todos(organisation_id)
+
+    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences', todos=todos)
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])
@@ -350,6 +357,20 @@ def licence_apply_done(organisation_id):
         abort(404)
 
     return render_template("licence-apply-done.html", organisation=organisation)
+
+@app.route("/manage/<organisation_id>/todos")
+@registry_oauth_required
+def todo_list(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    todos = _get_todos(organisation_id)
+
+    return render_template("todos.html", organisation=organisation, service=service, organisation_id=organisation_id, todos=todos)
 
 
 @app.route('/verify')
