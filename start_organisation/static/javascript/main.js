@@ -53,12 +53,12 @@ $( document ).ready(function() {
       url: '/manage/'+orgId+'/todos/'+todoId,
       type: 'DELETE',
       success: function(result) {
-          var todo_count = $('div.todo').length;
-          if(todo_count == 0){
+          var todoCount = $('div.todo').length;
+          if(todoCount == 0){
             $('span.alert').remove();
             $('i.notification').removeClass('notification');
           } else {
-            $('span.alert').text(todo_count);
+            $('span.alert').text(todoCount);
           }
       }
     });

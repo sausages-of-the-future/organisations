@@ -12,7 +12,7 @@
       <p>
         {% for todo in todos%}
           <div data-alert class="alert-box success todo" data-org="{{organisation_id}}" id={{todo.uuid}}>
-            Application for: {{ todo.licence_type }} Hearing scheduled for {{todo.hearing_date.strftime('%d/%m/%Y')}} at [location]
+            Application for: {{ todo.licence_type }} Hearing scheduled for {{todo.hearing_date.strftime('%d/%m/%Y')}} at Borchester City Council.
             <a href="#" class="close">x</a>
           </div>
         {% endfor %}
