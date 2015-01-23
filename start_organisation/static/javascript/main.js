@@ -44,4 +44,24 @@ $( document ).ready(function() {
       }
     }, 5000);
   }
+
+  //todo list
+  $('.todo').on('close.fndtn.alert-box', function(event) {
+    var todoId = $(event.currentTarget).attr('id'),
+        orgId = $(event.currentTarget).data('org');
+    $.ajax({
+      url: '/manage/'+orgId+'/todos/'+todoId,
+      type: 'DELETE',
+      success: function(result) {
+          var todo_count = $('div.todo').length;
+          if(todo_count == 0){
+            $('span.alert').remove();
+            $('i.notification').removeClass('notification');
+          } else {
+            $('span.alert').text(todo_count);
+          }
+      }
+    });
+  });
+
 });

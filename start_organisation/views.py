@@ -417,11 +417,39 @@ def _get_todos(organisation_id):
 def _set_todos(organisation_id, licences):
     import pickle
     import sys
+    import uuid
+
+    for licence in licences:
+        if not licence.get('uuid'):
+            licence['uuid'] = uuid.uuid4()
+        # fake up a hearing date
+        if not licence.get('hearing_date'):
+            from datetime import timedelta, datetime
+            from random import randint
+            start_date = datetime.now()
+            end_date = timedelta(days=randint(1,90))
+            hearing_date = start_date + end_date
+            licence['hearing_date'] = hearing_date
+
     try:
-        redis_client.set(organisation_id, pickle.dumps(licences))
+        if licences:
+            redis_client.set(organisation_id, pickle.dumps(licences))
+        else:
+            redis_client.delete(organisation_id)
     except:
         current_app.logger.info('something bad but carry on')
         current_app.logger.info(sys.exc_info()[0])
 
+# todo list mularkey
+@app.route('/manage/<organisation_id>/todos/<todo_uuid>', methods=['DELETE'])
+def delete_todo(organisation_id, todo_uuid):
+    import uuid
+    todo_uuid = uuid.UUID(todo_uuid)
+    todos = _get_todos(organisation_id)
+    to_keep = []
+    for todo in todos:
+        if todo['uuid'] != todo_uuid:
+            to_keep.append(todo)
 
-
+    _set_todos(organisation_id, to_keep)
+    return 'OK', 204
