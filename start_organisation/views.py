@@ -249,7 +249,7 @@ def manage_organisation_tax(organisation_id):
     else:
         abort(404)
 
-    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='tax')
 
 @app.route("/manage/<organisation_id>/employees")
 @registry_oauth_required
