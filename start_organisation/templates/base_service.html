@@ -14,7 +14,7 @@
         <section class="right-small">
           <a class="right-off-canvas-toggle menu-icon" href="#">
             <i class="fa fa-bars"></i>
-            <i class="fa fa-circle notification"></i>
+            <i class="fa fa-circle {% if todos%}notification{% endif %}"></i>
           </a>
         </section>
       </nav>
@@ -35,7 +35,7 @@
           {% for register in service.registers %}
             <a href="#">
               {% if loop.last and not loop.first %}
-                and 
+                and
               {% endif %}
               {{register|lower}}
             </a>
@@ -50,7 +50,7 @@
         </p>
         <ul class="off-canvas-list">
           <li><a href="#">Performance</a></li>
-          <li><a href="#">Legislation</a></li> 
+          <li><a href="#">Legislation</a></li>
           <li><a href="#">Policy tests</a></li>
           <li><a href="#">Make a complaint</a></li>
           <li><a href="#">Service blog</a></li>
@@ -58,9 +58,9 @@
        </aside>
 
         <a class="exit-off-canvas"></a>
-        <aside class="right-off-canvas-menu"> 
-          <ul class="off-canvas-list"> 
-          
+        <aside class="right-off-canvas-menu">
+          <ul class="off-canvas-list">
+
           <li>
             <a href="#"><i class="fa fa-pencil-square-o"></i>
  Report a change</a>
@@ -70,12 +70,12 @@
           Notification settings</a>
           </li>
           <li>
-            <a href="#"><span class="round alert label">5</span> To do list</a>
+            <a href="{{ url_for('todo_list', organisation_id=organisation_id) }}">{% if todos %}<span class="round alert label">{{todos | length}}</span>{% endif %} To do list</a>
           </li>
-        </ul> 
-      </aside> 
+        </ul>
+      </aside>
 
-      </div> 
+      </div>
     </div>
 {% endblock %}
 

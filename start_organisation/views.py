@@ -24,6 +24,8 @@ from start_organisation.order import Order
 from start_organisation import app, oauth
 from decorators import registry_oauth_required
 
+from start_organisation import redis_client
+
 service = {
   "name": "Start organisation",
   "minister": "Minister for business",
@@ -78,7 +80,7 @@ def start():
 def choose_type():
     order_data = session.get('order', None)
     if order_data:
-        order = Order(**organisation_data)
+        order = Order(**order_data)
     else:
         order = Order()
 
@@ -136,7 +138,7 @@ def start_invite():
             #next
             return redirect(url_for('start_register'))
         else:
-            current_app.logger.info('invalid form%s' % form.errors)
+            current_app.logger.info('invalid form %s' % form.errors)
 
 
     return render_template('start-invite.html', form=form)
@@ -225,7 +227,9 @@ def manage_organisation(organisation_id):
     else:
         abort(404)
 
-    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview')
+    todos = _get_todos(organisation_id)
+
+    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview', todos=todos)
 
 @app.route("/manage/<organisation_id>/licences")
 @registry_oauth_required
@@ -237,7 +241,10 @@ def manage_organisation_licences(organisation_id):
     else:
         abort(404)
 
-    return render_template("licences.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+    todos = _get_todos(organisation_id)
+
+    return render_template("licences.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences', todos=todos)
+
 
 @app.route("/manage/<organisation_id>/tax")
 @registry_oauth_required
@@ -249,7 +256,9 @@ def manage_organisation_tax(organisation_id):
     else:
         abort(404)
 
-    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='tax')
+    todos = _get_todos(organisation_id)
+
+    return render_template("tax.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='tax', todos=todos)
 
 @app.route("/manage/<organisation_id>/employees")
 @registry_oauth_required
@@ -261,7 +270,9 @@ def manage_organisation_employees(organisation_id):
     else:
         abort(404)
 
-    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences')
+    todos = _get_todos(organisation_id)
+
+    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences', todos=todos)
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])
@@ -321,8 +332,14 @@ def licence_apply_address(organisation_id):
                     "licences": licences }
 
             response = registry.post('/notices', data=data, format='json')
+
+            _set_todos(organisation_id, licences)
+
             session.pop('licences', None)
+
             return redirect(url_for('licence_apply_done', organisation_id=organisation_id))
+
+
         else:
             current_app.logger.info('we should not be here')
             return redirect(url_for('licence_apply_address', organisation_id=organisation_id))
@@ -340,6 +357,20 @@ def licence_apply_done(organisation_id):
         abort(404)
 
     return render_template("licence-apply-done.html", organisation=organisation)
+
+@app.route("/manage/<organisation_id>/todos")
+@registry_oauth_required
+def todo_list(organisation_id):
+    uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
+    response = requests.get(uri)
+    if response.status_code == 200:
+        organisation = response.json()
+    else:
+        abort(404)
+
+    todos = _get_todos(organisation_id)
+
+    return render_template("todos.html", organisation=organisation, service=service, organisation_id=organisation_id, todos=todos)
 
 
 @app.route('/verify')
@@ -367,3 +398,58 @@ def verified():
         return redirect(url_for('index'))
 
 
+# These are just to hook up some notifications and
+# don't let then break stuff. swallow exceptions and carry on
+def _get_todos(organisation_id):
+    import sys
+    all_todos = []
+    try:
+        todos = redis_client.get(organisation_id)
+        if todos:
+            import pickle
+            all_todos = pickle.loads(todos)
+    except:
+        current_app.logger.info('something bad but carry on')
+        current_app.logger.info(sys.exc_info()[0])
+    return all_todos
+
+
+def _set_todos(organisation_id, licences):
+    import pickle
+    import sys
+    import uuid
+
+    for licence in licences:
+        if not licence.get('uuid'):
+            licence['uuid'] = uuid.uuid4()
+        # fake up a hearing date
+        if not licence.get('hearing_date'):
+            from datetime import timedelta, datetime
+            from random import randint
+            start_date = datetime.now()
+            end_date = timedelta(days=randint(1,90))
+            hearing_date = start_date + end_date
+            licence['hearing_date'] = hearing_date
+
+    try:
+        if licences:
+            redis_client.set(organisation_id, pickle.dumps(licences))
+        else:
+            redis_client.delete(organisation_id)
+    except:
+        current_app.logger.info('something bad but carry on')
+        current_app.logger.info(sys.exc_info()[0])
+
+# todo list mularkey
+@app.route('/manage/<organisation_id>/todos/<todo_uuid>', methods=['DELETE'])
+def delete_todo(organisation_id, todo_uuid):
+    import uuid
+    todo_uuid = uuid.UUID(todo_uuid)
+    todos = _get_todos(organisation_id)
+    to_keep = []
+    for todo in todos:
+        if todo['uuid'] != todo_uuid:
+            to_keep.append(todo)
+
+    _set_todos(organisation_id, to_keep)
+    return 'OK', 204
