@@ -17,4 +17,7 @@ if 'SENTRY_DSN' in os.environ:
     from raven.contrib.flask import Sentry
     sentry = Sentry(app, dsn=os.environ['SENTRY_DSN'])
 
+from messenger import Connector
+locator = Connector(app)
+
 from start_organisation import views
