@@ -132,7 +132,7 @@ def start_invite():
             for person in form.people:
                 order.directors.append(person.fullname.data)
                 if person.phone.data:
-                    message = "Please visit Idealgov and enter the following code to verify you wish to become a director of '%s': %s" % (order.name, make_random_token())
+                    message = "Please visit GOV.UK and enter the following code to verify you wish to become a director of '%s': %s" % (order.name, make_random_token())
                     client.sms.messages.create(to=person.phone.data, from_=app.config['TWILLIO_PHONE_NUMBER'], body=message)
 
             #next

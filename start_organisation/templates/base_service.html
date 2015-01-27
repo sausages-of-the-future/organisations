@@ -60,20 +60,19 @@
         <a class="exit-off-canvas"></a>
         <aside class="right-off-canvas-menu">
           <ul class="off-canvas-list">
-
-          <li>
-            <a href="#"><i class="fa fa-pencil-square-o"></i>
- Report a change</a>
-          </li>
-          <li>
-            <a href="#"><i class="fa fa-envelope-o"></i>
-          Notification settings</a>
-          </li>
-          <li>
-            <a href="{{ url_for('todo_list', organisation_id=organisation_id) }}">{% if todos %}<span class="round alert label">{{todos | length}}</span>{% endif %} To do</a>
-          </li>
-        </ul>
-      </aside>
+            <li>
+              <a href="#"><i class="fa fa-pencil-square-o"></i>
+   Report a change</a>
+            </li>
+            <li>
+              <a href="#"><i class="fa fa-envelope-o"></i>
+            Notification settings</a>
+            </li>
+            <li>
+              <a href="{{ url_for('todo_list', organisation_id=organisation_id) }}">{% if todos %}<span class="round alert label">{{todos | length}}</span>{% endif %} To do</a>
+            </li>
+          </ul>
+        </aside>
 
       </div>
     </div>
