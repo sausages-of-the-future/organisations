@@ -24,7 +24,7 @@ from start_organisation.order import Order
 from start_organisation import app, oauth
 from decorators import registry_oauth_required
 
-from start_organisation import redis_client
+from start_organisation import redis_client, locator
 
 service = {
   "name": "Start organisation",
@@ -127,6 +127,10 @@ def start_invite():
 
     if request.method == 'POST':
         if form.validate():
+
+            #this can be used to highlight another service/platform being used
+            locator.send_message({ "active": "sms" })
+
             #send sms
             client = TwilioRestClient(app.config['TWILIO_ACCOUNT_ID'], app.config['TWILIO_AUTH_TOKEN'])
             for person in form.people:
