@@ -84,6 +84,8 @@ def choose_type():
     else:
         order = Order()
 
+    locator.send_message({ "active": "organisations" })
+
     # create form and add options
     form = forms.StartOrganisationTypeForm(request.form)
     form.organisation_type.value = order.organisation_type
@@ -172,7 +174,7 @@ def start_register():
 def start_taxes():
     if request.method == "POST":
         return redirect(url_for('start_review'))
-    return render_template('start-taxes.html')    
+    return render_template('start-taxes.html')
 
 
 @app.route("/start/review", methods=['GET', 'POST'])
