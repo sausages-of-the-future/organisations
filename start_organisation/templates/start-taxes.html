@@ -1,0 +1,25 @@
+{% extends "base_transaction.html" %}
+{% block title %}Types of organisation{% endblock%}
+{% block transaction_content %}
+  <div class="row">
+    <div class="small-12 columns">
+        <h2>Taxes</h2>
+        <ul>
+          <li>
+            Your organisation will be registered for Corporation tax &nbsp;<small><a href="">Don't do this</a></small>
+          </li>
+          <li>
+            Directors will automatically be registered for Self Assessment
+            &nbsp;<small><a href="">Don't do this</a></small>
+          </li>
+          <li>
+            Your organisation will automatically be registered for VAT once
+            its VAT taxable turnover reaches more than &pound;81,000 &nbsp;<small><a href="">Register now anyway</a></small>
+          </li>
+        </ul>
+      <form method="post" action="">
+        <button type="submit" class="button expand">Next</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

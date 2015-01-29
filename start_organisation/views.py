@@ -144,7 +144,6 @@ def start_invite():
         else:
             current_app.logger.info('invalid form %s' % form.errors)
 
-
     return render_template('start-invite.html', form=form)
 
 @app.route("/start/register", methods=['GET', 'POST'])
@@ -164,9 +163,17 @@ def start_register():
             order.register_employer = form.register_employer.data
             order.register_construction = form.register_construction.data
             session['order'] = order.to_dict()
-            return redirect(url_for('start_review'))
+            return redirect(url_for('start_taxes'))
 
     return render_template('start-register.html', form=form)
+
+@app.route("/start/taxes", methods=['GET', 'POST'])
+@registry_oauth_required
+def start_taxes():
+    if request.method == "POST":
+        return redirect(url_for('start_review'))
+    return render_template('start-taxes.html')    
+
 
 @app.route("/start/review", methods=['GET', 'POST'])
 @registry_oauth_required
