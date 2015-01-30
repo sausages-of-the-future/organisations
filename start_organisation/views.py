@@ -17,7 +17,7 @@ from flask import (
 
 import requests
 import jinja2
-from flask_oauthlib.client import OAuth
+from flask_oauthlib.client import OAuth, OAuthException
 from twilio.rest import TwilioRestClient
 import start_organisation.forms as forms
 from start_organisation.order import Order
@@ -41,7 +41,6 @@ service = {
   ]
 }
 
-licene_types = {'use_cctv': 'test'}
 
 registry = oauth.remote_app(
     'registry',
@@ -131,7 +130,8 @@ def start_invite():
         if form.validate():
 
             #this can be used to highlight another service/platform being used
-            locator.send_message({ "active": "sms" })
+            if form.people.data:
+                locator.send_message({ "active": "sms" })
 
             #send sms
             client = TwilioRestClient(app.config['TWILIO_ACCOUNT_ID'], app.config['TWILIO_AUTH_TOKEN'])
@@ -396,13 +396,15 @@ def verify():
 @app.route('/verified')
 def verified():
     resp = registry.authorized_response()
-    if resp is None:
+
+    if resp is None or isinstance(resp, OAuthException):
         return 'Access denied: reason=%s error=%s' % (
         request.args['error_reason'],
         request.args['error_description']
         )
 
     session['registry_token'] = (resp['access_token'], '')
+    session['refresh_token'] = resp['refresh_token']
     if session.get('resume_url'):
         resume_url = session.get('resume_url')
         session.pop('resume_url', None)
