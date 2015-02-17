@@ -1,6 +1,6 @@
 {% extends "base_service.html" %}
 {% block title %}{{organisation.name}}{% endblock%}
-{% block service_title %} Manage - {{organisation.name}}{% endblock%}
+{% block service_title %} <a href="{{ url_for('manage_organisation', organisation_id=organisation_id) }}">Manage - {{organisation.name}}</a>{% endblock%}
 {% block service_content %}
   <div class="row">
     <div class="small-12 columns">
@@ -9,7 +9,7 @@
   </div>
   <div class="row">
     <div class="small-12 columns">
-      
+
       {% include "_tabs.html" %}
 
       <p>

@@ -1,13 +1,13 @@
 {% extends "base_service.html" %}
 {% block title %}{{organisation.name}}{% endblock%}
-{% block service_title %} Manage - {{organisation.name}}{% endblock%}
+{% block service_title %} <a href="{{ url_for('manage_organisation', organisation_id=organisation_id) }}">Manage - {{organisation.name}}</a>{% endblock%}
 {% block service_content %}
   <div class="row">
     <div class="small-12 columns">
       <ul class="todolist">
         {% for todo in todos%}
           <li id={{todo.uuid}}>
-            Application for: {{ todo.licence_type }} Hearing scheduled for {{todo.hearing_date.strftime('%d/%m/%Y')}} at <a href="{{config.LOCALGOV_BASE_URL}}">Borchester City Council.
+            Application for: {{ todo.licence_type }} Hearing scheduled for {{todo.hearing_date.strftime('%d/%m/%Y')}} at <a href="{{config.LOCALGOV_BASE_URL}}">Borchester City Council.</a>
           </li>
         {% endfor %}
       </ul>

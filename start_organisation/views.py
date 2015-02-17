@@ -54,6 +54,16 @@ registry = oauth.remote_app(
     authorize_url='%s/oauth/authorize' % app.config['REGISTRY_BASE_URL']
 )
 
+
+def log_traceback(logger, ex, ex_traceback=None):
+    import traceback
+    if ex_traceback is None:
+        ex_traceback = ex.__traceback__
+    tb_lines = [ line.rstrip('\n') for line in
+                 traceback.format_exception(ex.__class__, ex, ex_traceback)]
+    logger.info(tb_lines)
+
+
 def make_random_token():
     random =  hashlib.sha1(os.urandom(128)).hexdigest()
     random = random.upper()
@@ -241,8 +251,9 @@ def manage_organisation(organisation_id):
         abort(404)
 
     todos = _get_todos(organisation_id)
+    unread_todos = [todo for todo in todos if not todo['read']]
 
-    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview', todos=todos)
+    return render_template("manage.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='overview', todos=todos, unread_todos=unread_todos)
 
 @app.route("/manage/<organisation_id>/licences")
 @registry_oauth_required
@@ -381,7 +392,7 @@ def todo_list(organisation_id):
     else:
         abort(404)
 
-    todos = _get_todos(organisation_id)
+    todos = _get_todos(organisation_id, mark_read=True)
 
     return render_template("todos.html", organisation=organisation, service=service, organisation_id=organisation_id, todos=todos)
 
@@ -415,7 +426,7 @@ def verified():
 
 # These are just to hook up some notifications and
 # don't let then break stuff. swallow exceptions and carry on
-def _get_todos(organisation_id):
+def _get_todos(organisation_id, mark_read=False):
     import sys
     all_todos = []
     try:
@@ -423,48 +434,42 @@ def _get_todos(organisation_id):
         if todos:
             import pickle
             all_todos = pickle.loads(todos)
-    except:
-        current_app.logger.info('something bad but carry on')
-        current_app.logger.info(sys.exc_info()[0])
+            #mark all as read
+            if mark_read:
+                for todo in all_todos:
+                    todo['read'] = True
+                _set_todos(organisation_id, all_todos)
+    except Exception as e:
+        log_traceback(current_app.logger, e)
+
+
+    current_app.logger.info('ALL TODOS %s' % all_todos)
+
     return all_todos
 
 
-def _set_todos(organisation_id, licences):
+def _set_todos(organisation_id, todos):
     import pickle
     import sys
     import uuid
 
-    for licence in licences:
-        if not licence.get('uuid'):
-            licence['uuid'] = uuid.uuid4()
+    for todo in todos:
+        if not todo.get('uuid'):
+            todo['uuid'] = uuid.uuid4()
         # fake up a hearing date
-        if not licence.get('hearing_date'):
+        if not todo.get('hearing_date'):
             from datetime import timedelta, datetime
             from random import randint
             start_date = datetime.now()
             end_date = timedelta(days=randint(1,90))
             hearing_date = start_date + end_date
-            licence['hearing_date'] = hearing_date
-
+            todo['hearing_date'] = hearing_date
+        if not todo.get('read'):
+            todo['read'] = False
     try:
-        if licences:
-            redis_client.set(organisation_id, pickle.dumps(licences))
+        if todos:
+            redis_client.set(organisation_id, pickle.dumps(todos))
         else:
             redis_client.delete(organisation_id)
-    except:
-        current_app.logger.info('something bad but carry on')
-        current_app.logger.info(sys.exc_info()[0])
-
-# todo list mularkey
-@app.route('/manage/<organisation_id>/todos/<todo_uuid>', methods=['DELETE'])
-def delete_todo(organisation_id, todo_uuid):
-    import uuid
-    todo_uuid = uuid.UUID(todo_uuid)
-    todos = _get_todos(organisation_id)
-    to_keep = []
-    for todo in todos:
-        if todo['uuid'] != todo_uuid:
-            to_keep.append(todo)
-
-    _set_todos(organisation_id, to_keep)
-    return 'OK', 204
+    except Exception as e:
+        log_traceback(current_app.logger, e)
