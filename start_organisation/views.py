@@ -296,7 +296,7 @@ def manage_organisation_employees(organisation_id):
 
     todos = _get_todos(organisation_id)
 
-    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='licences', todos=todos)
+    return render_template("employees.html", organisation=organisation, service=service, organisation_id=organisation_id, selected_tab='employees', todos=todos)
 
 #apply for a licence
 @app.route("/manage/<organisation_id>/licences/apply", methods=['GET', 'POST'])
