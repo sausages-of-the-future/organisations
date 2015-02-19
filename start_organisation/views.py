@@ -438,17 +438,14 @@ def _get_todos(organisation_id, mark_read=False):
             if mark_read:
                 for todo in all_todos:
                     todo['read'] = True
-                _set_todos(organisation_id, all_todos)
+            _set_todos(organisation_id, all_todos, replace=True)
     except Exception as e:
         log_traceback(current_app.logger, e)
-
-
-    current_app.logger.info('ALL TODOS %s' % all_todos)
 
     return all_todos
 
 
-def _set_todos(organisation_id, todos):
+def _set_todos(organisation_id, todos, replace=False):
     import pickle
     import sys
     import uuid
@@ -468,7 +465,15 @@ def _set_todos(organisation_id, todos):
             todo['read'] = False
     try:
         if todos:
-            redis_client.set(organisation_id, pickle.dumps(todos))
+            if replace:
+                redis_client.set(organisation_id, pickle.dumps(todos))
+            else:
+                all_todos = []
+                existing_todos = redis_client.get(organisation_id)
+                if existing_todos:
+                    all_todos = pickle.loads(existing_todos)
+                all_todos.extend(todos)
+                redis_client.set(organisation_id, pickle.dumps(all_todos))
         else:
             redis_client.delete(organisation_id)
     except Exception as e:
