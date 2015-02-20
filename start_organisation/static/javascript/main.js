@@ -2,13 +2,15 @@ $( document ).ready(function() {
   $(document).foundation();
 
   //organisation name
+  $('.ok').hide();
   $('#start_details #name').keypress(
     function(){
         //fake a name check
+        console.log($('#start_details #name').val().length);
         if($('#start_details #name').val().length >= 4){
-            $('form ul.verified-facts').show();
+            $('.ok').show();
         } else {
-            $('form ul.verified-facts').hide();
+            $('.ok').hide();
         }
     }
   );

@@ -6,12 +6,9 @@
      <h2>Organisation details</h2>
      <form id="start_details" action="" method="post">
          {{ render_field(form.name) }}
-         <ul class="verified-facts hide">
-          <li>
-          <span>&#10003;</span>
-          Name avalible
-          </li>
-        </ul>
+         <p class="ok">
+          <span class="ok label success">Name available</span>
+        </p>
          {{ render_field(form.activities) }}
          <button type="submit" class="button expand">Next</button>
          {{ form.csrf_token }}
