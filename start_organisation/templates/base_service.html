@@ -69,13 +69,20 @@
             Notification settings</a>
             </li>
             <li>
-              <a href="{{ url_for('todo_list', organisation_id=organisation_id) }}">{% if unread_todos %}<span class="round alert label">{{unread_todos | length}}</span>{% endif %} To do</a>
+              <a href="{{ url_for('todo_list', organisation_id=organisation_id) }}">
+                {% if unread_todos %}
+                  <span class="round alert label">
+                    {{unread_todos | length}}
+                  </span>
+                {% endif %}
+                To do
+              </a>
+            </li>
+            <li>
+              <a href="{{url_for('signout')}}">Sign out</a>
             </li>
           </ul>
         </aside>
-
       </div>
     </div>
 {% endblock %}
-
-

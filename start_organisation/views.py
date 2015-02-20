@@ -239,6 +239,11 @@ def manage():
     else:
         abort(404)
 
+@app.route("/signout")
+def signout():
+    session.clear()
+
+
 @app.route("/manage/<organisation_id>")
 @registry_oauth_required
 def manage_organisation(organisation_id):
