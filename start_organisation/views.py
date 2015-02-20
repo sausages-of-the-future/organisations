@@ -242,7 +242,7 @@ def manage():
 @app.route("/signout")
 def signout():
     session.clear()
-
+    return redirect("%s/start" % app.config['WWW_BASE_URL'])
 
 @app.route("/manage/<organisation_id>")
 @registry_oauth_required
