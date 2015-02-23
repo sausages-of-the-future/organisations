@@ -121,9 +121,54 @@ def start_details():
         order.name = form.name.data
         order.activities = form.activities.data
         session['order'] = order.to_dict()
-        return redirect(url_for('start_invite'))
+        return redirect(url_for('find_address'))
 
     return render_template('start-details.html', form=form)
+
+
+@app.route("/start/postcode-lookup", methods=['GET', 'POST'])
+@registry_oauth_required
+def find_address():
+    order_data = session.get('order', None)
+    if order_data:
+        order = Order(**order_data)
+    else:
+        return redirect(url_for('choose_type'))
+    form = forms.StartOrganisationPostcodeForm(request.form)
+    if request.method == 'POST':
+        postcode = form.postcode.data
+        address_form = forms.StartOrganisationChooseAddress()
+        if postcode:
+            uri = "%s/addresses" % app.config['REGISTRY_BASE_URL']
+            response = requests.get(uri, params={'postcode': postcode})
+            if response.status_code == 200:
+                #TODO - store uri of address?
+                addresses = [(item['address'], item['address']) for item in response.json()]
+                addresses.sort(key=lambda address: address[1])
+                address_form.address_choices.choices = addresses
+        else:
+            address_form.address_choices.choices = [('Transworld House, 100 Borchester City Road, Borchester, BO1Y 2BP','Transworld House, 100 Borchester City Road, Borchester, BO1Y 2BP')]
+
+        return render_template('choose-address.html', form=address_form)
+
+    return render_template('postcode-lookup.html', form=form)
+
+
+@app.route("/start/choose-address", methods=['POST'])
+@registry_oauth_required
+def choose_address():
+    order_data = session.get('order', None)
+    if order_data:
+        order = Order(**order_data)
+    else:
+        return redirect(url_for('choose_type'))
+
+    current_app.logger.info('selected address %s' % request.form['address_choices'])
+    order.address = request.form['address_choices']
+    session['order'] = order.to_dict()
+
+    return redirect(url_for('start_invite'))
+
 
 @app.route("/start/invite", methods=['GET', 'POST'])
 @registry_oauth_required
@@ -208,7 +253,7 @@ def start_review():
                 'register_employer' : order.register_employer,
                 'register_construction' : order.register_construction,
                 'directors' : order.directors,
-                'full_address': 'Transworld House, 100 Borchester City Road, Borchester, BO1Y 2BP' #TODO - address form for org create
+                'full_address': order.address
             }
 
             response = registry.post('/organisations', data=data, format='json')

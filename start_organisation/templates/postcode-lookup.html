@@ -1,0 +1,14 @@
+{% extends "base_transaction.html" %}
+{% block title %}Organisation postcode{% endblock%}
+{% block transaction_content %}
+  <div class="row">
+    <div class="small-12 columns">
+     <h2>Organisation postcode</h2>
+     <form id="postcode_lookup" action="" method="post">
+         {{ render_field( form.postcode, placeholder='Enter a postcode e.g. M4 1HW' ) }}
+         <button type="submit" class="button expand">Next</button>
+         {{ form.csrf_token }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -51,6 +51,13 @@ class StartOrganisationInviteForm(Form):
 class StartOrganisationReviewForm(Form):
     confirm = BooleanField("I confirm that the details above are correct (it is an offence to provide information which you know to be incorrect.)", validators=[validators.DataRequired("You must confirm that the details are correct (it is an offence to provide information which you know to be incorrect.)")])
 
+class StartOrganisationPostcodeForm(Form):
+    postcode = TextField('Enter postcode', validators=[validators.required()])
+
+
+class StartOrganisationChooseAddress(Form):
+    address_choices = RadioField('Address choice', choices=[], validators=[validators.required()])
+
 class LicenceApplicationForm(Form):
     use_cctv = BooleanField("Use CCTV systems", description="Licence to use CCTV systems.")
     discharge_effluent = BooleanField("Discharge trade effluent", description="Licence to discharge trade effluent.")
