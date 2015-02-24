@@ -2,18 +2,26 @@ $( document ).ready(function() {
   $(document).foundation();
 
   //organisation name
-  $('.ok').hide();
-  $('#start_details #name').keypress(
-    function(){
-        //fake a name check
-        console.log($('#start_details #name').val().length);
-        if($('#start_details #name').val().length >= 4){
-            $('.ok').show();
-        } else {
-            $('.ok').hide();
-        }
-    }
-  );
+  $('#ok').hide();
+  $('#nok').hide();
+  $('#start_details #name').on('blur', function(evt) {
+        var nameToCheck = evt.currentTarget.value;
+        $.ajax({ cache: false,
+            url: "/check",
+            data: { 'name': nameToCheck},
+            success: function(data) {
+              $('#nok').show();
+              $('#start_details #name').focus();
+              $('#ok').hide();
+            },
+            error: function(xhr, textStatus, errorThrown) {
+              if(xhr.status==404 || textStatus=='NOT FOUND'){
+                  $('#ok').show();
+                  $('#nok').hide();
+              }
+            }
+        });
+  });
 
   //directors
   show_hide_invites();

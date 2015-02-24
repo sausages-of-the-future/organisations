@@ -6,8 +6,11 @@
      <h2>Organisation details</h2>
      <form id="start_details" action="" method="post">
          {{ render_field(form.name) }}
-         <p class="ok">
+        <p id="ok">
           <span class="ok label success">Name available</span>
+        </p>
+        <p id="nok">
+          <span class="nok label warning">Name not available</span>
         </p>
          {{ render_field(form.activities) }}
          <button type="submit" class="button expand">Next</button>

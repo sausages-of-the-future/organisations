@@ -432,7 +432,7 @@ def licence_apply_done(organisation_id):
 
     return render_template("licence-apply-done.html", organisation=organisation)
 
-@app.route("/manage/<organisation_id>/todos")
+@app.route("/")
 @registry_oauth_required
 def todo_list(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
@@ -445,7 +445,6 @@ def todo_list(organisation_id):
     todos = _get_todos(organisation_id, mark_read=True)
 
     return render_template("todos.html", organisation=organisation, service=service, organisation_id=organisation_id, todos=todos)
-
 
 @app.route('/verify')
 def verify():
@@ -472,6 +471,17 @@ def verified():
         return redirect(resume_url)
     else:
         return redirect(url_for('index'))
+
+
+@app.route('/check')
+def check_name():
+    name = request.args.get('name')
+    uri = "%s/organisations" % app.config['REGISTRY_BASE_URL']
+    response = requests.get(uri, params={'exact_match': name})
+    organisations = response.json()
+    if len(organisations) > 0:
+        return 'OK', 200
+    return 'NOT FOUND', 404
 
 
 # These are just to hook up some notifications and
