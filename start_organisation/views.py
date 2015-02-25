@@ -432,7 +432,7 @@ def licence_apply_done(organisation_id):
 
     return render_template("licence-apply-done.html", organisation=organisation)
 
-@app.route("/")
+@app.route("/manage/<organisation_id>/todos")
 @registry_oauth_required
 def todo_list(organisation_id):
     uri = "%s/organisations/%s" % (app.config['REGISTRY_BASE_URL'], organisation_id)
