@@ -1,4 +1,4 @@
-{% extends "base_service.html" %}
+{% extends "base-service.html" %}
 {% block title %}{{organisation.name}}{% endblock%}
 {% block service_title %} <a href="{{ url_for('manage_organisation', organisation_id=organisation_id) }}">Manage - {{organisation.name}}</a>{% endblock%}
 {% block service_content %}

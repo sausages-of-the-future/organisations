@@ -24,7 +24,6 @@ $( document ).ready(function() {
   });
 
   //directors
-  show_hide_invites();
   function show_hide_invites(){
 
     $('#director_contact table').remove();
@@ -39,7 +38,16 @@ $( document ).ready(function() {
     }
   }
 
-  $("#director_count").change(function() {
+  $("#user_is_director").change(function(evt) {
+    var userIsDirector = evt.currentTarget.value;
+    if(userIsDirector == 'True'){
+      $('label[for="director_count"]').text("Other than yourself - how many other directors are there?");
+    } else {
+      $('label[for="director_count"]').text("How many other directors are there?");
+    }
+  });
+
+   $("#director_count").change(function() {
     show_hide_invites();
   });
 
