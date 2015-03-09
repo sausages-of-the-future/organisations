@@ -1,11 +1,12 @@
 {% extends "base-transaction.html" %}
 {% block title %}Types of organisation{% endblock %}
+{% block header_title %}<a href="/">Apply for licences</a>{% endblock %}
 {% block transaction_content %}
   <div class="row">
     <div class="small-12 columns">
       <p>What address do you require the licences for?</p>
       <form action="" method="post">
-        {{ form.licence_address }}
+        {{ form.licence_address(class_="radio") }}
         {{ form.csrf_token }}
         <button class="button expand" type="submit">Next</button>
       </form>

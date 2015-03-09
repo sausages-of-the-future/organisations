@@ -21,7 +21,7 @@ class StartOrganisationTypeForm(Form):
     organisation_type = RadioField('Organisation type', choices=organisation_types, validators=[validators.required()])
 
 class StartOrganisationDetailsForm(Form):
-    name = TextField('Organisation name', validators=[validators.required()])
+    name = TextField('Company name', validators=[validators.required()])
     activities = TextAreaField('Main business activities', validators=[validators.required()])
 
 class StartOrganisationRegistrationForm(Form):

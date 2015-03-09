@@ -9,10 +9,9 @@
         {{ render_field(form.director_count, type='number') }}
         <div id="director_contact">
           <p>
-            Each person will need to enter a one-use code, then sign in to register as directors</em>.
+            Each person will need to enter a one-use code, then sign in to register as directors.
           </p>
-          {{ render_field(form.method) }}
-
+          {{ form.method(class_="radio") }}
         </div>
         <button type="submit" class="button expand">Next</button>
          {{ form.csrf_token }}

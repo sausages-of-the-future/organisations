@@ -1,11 +1,24 @@
 {% extends "base-transaction.html" %}
 {% block title %}Registrations{% endblock%}
 {% block transaction_content %}
+  <style>
+  input[type="checkbox"] {
+    margin:0;
+  }
+  .question {
+    background:#ECEDED;
+  }
+  </style>
   <div class="row">
     <div class="small-12 columns">
       <form method="post" action="">
         <h2>Registrations</h2>
         <p>
+          There are other things you need to register for when starting a company.
+          Please choose the ones that apply to your company.
+        </p>
+        <hr/>
+        <p class="question">
           {{render_checkbox(form.register_data)}}
         </p>
         <p class="hint">
