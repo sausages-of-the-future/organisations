@@ -1,5 +1,5 @@
 {% extends "base-transaction.html" %}
-{% block title %}Types of organisation{% endblock%}
+{% block title %}Types of company{% endblock%}
 {% block transaction_content %}
   <div class="row">
     <div class="small-12 columns">
@@ -8,7 +8,7 @@
           Bankruptcy and insolvency register check OK
         </li>
       </ul>
-     <h3>Choose a type of organisation</h3>
+     <h3>Choose a type of company</h3>
      <form action="" method="post">
          {{form.organisation_type(class_="radio")}}
          <button type="submit" class="button expand">Next</button>

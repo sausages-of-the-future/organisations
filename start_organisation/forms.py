@@ -49,7 +49,7 @@ class StartOrganisationInviteForm(Form):
     people = FieldList(FormField(PersonForm), min_entries=0)
 
 class StartOrganisationReviewForm(Form):
-    confirm = BooleanField("I confirm that the details above are correct (it is an offence to provide information which you know to be incorrect.)", validators=[validators.DataRequired("You must confirm that the details are correct (it is an offence to provide information which you know to be incorrect.)")])
+    confirm = BooleanField("I confirm", validators=[validators.DataRequired("You must confirm that the details are correct (it is an offence to provide information which you know to be incorrect.)")])
 
 class StartOrganisationPostcodeForm(Form):
     postcode = TextField('Enter postcode', validators=[validators.required()])

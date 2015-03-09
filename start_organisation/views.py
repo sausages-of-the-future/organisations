@@ -46,14 +46,13 @@ registry = oauth.remote_app(
     'registry',
     consumer_key=app.config['REGISTRY_CONSUMER_KEY'],
     consumer_secret=app.config['REGISTRY_CONSUMER_SECRET'],
-    request_token_params={'scope': 'organisation:add person:view notice:add'},
+    request_token_params={'scope': 'organisation:add person:view notice:add bankruptcy:check insolvency:check dataprotection:add employers:add tax:add'},
     base_url=app.config['REGISTRY_BASE_URL'],
     request_token_url=None,
     access_token_method='POST',
     access_token_url='%s/oauth/token' % app.config['REGISTRY_BASE_URL'],
     authorize_url='%s/oauth/authorize' % app.config['REGISTRY_BASE_URL']
 )
-
 
 def log_traceback(logger, ex, ex_traceback=None):
     import traceback

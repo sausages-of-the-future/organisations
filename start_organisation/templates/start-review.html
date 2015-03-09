@@ -5,10 +5,9 @@
     <div class="small-12 columns">
      <h2>Review details</h2>
      <div class="panel">
-        <i class="fa fa-bookmark fa-4x"></i>
-       <h5>{{order.name}}</h5>
-       <hr/>
        <dl>
+         <dt>Company name</dt>
+         <dd>{{order.name}}</dd>
          <dt>Organisation type</dt>
          <dd>{{order.organisation_type.replace('-',' ')}}</dd>
 
@@ -30,14 +29,74 @@
               <dd>Payment of subcontractors for construction work</dd>
            {% endif %}
          {% endif %}
-
        </dl>
      </div>
+     <h3>Confirmation</h3>
      <form action="" method="post">
-        {{ render_checkbox(form.confirm) }}
+      <p>
+        You must confirm that the above details are correct. It is an offence to provide information which you know to be incorrect.
+      </p>
+      <hr/>
+      <div class="switch large">
+        {{ form.confirm }}
+        {{ form.confirm.label }}
+      </div>
+      <strong class="switch-label">I confirm</strong>
         <button type="submit" class="button expand">Create organisation</button>
         {{ form.csrf_token }}
       </form>
     </div>
   </div>
+
+  <style>
+    .unconfirmed {
+      background:#fafafa;
+      color:#808080;
+      overflow:hidden;
+    }
+/*    .unconfirmed::after{
+      content: "UNCONFIRMED";
+      display: inline-block;
+      position:absolute;
+      top:80px;
+      text-align:center;
+      color:red;
+      width:100%;
+      opacity:0.2;
+      transform:rotate(45deg);
+      font-size:2rem;
+      font-weight:bold;
+    }*/
+    .switch {
+      float:left;
+      width:80px;
+      margin-right:10px;
+    }
+    .switch-label {
+      font-weight:bold;
+      font-size:1.3rem;
+      position:relative;
+      top:5px;
+    }
+  </style>
+
+  <script>
+
+      //setup
+      $('.button').attr("disabled", "disabled");
+      $('.panel').addClass('unconfirmed');
+
+      $('#confirm').change(
+        function(){
+          if ($(this).is(':checked') == true){
+            $('.button').attr("disabled", false);
+            $('.panel').removeClass('unconfirmed');
+            
+          }else{
+            $('.button').attr("disabled", "disabled");
+            $('.panel').addClass('unconfirmed');
+          }
+        }
+      );
+  </script>
 {% endblock %}
